@@ -1,0 +1,437 @@
+<%
+    local XQVersion = require "xiaoqiang.XQVersion"
+    local XQSysUtil = require "xiaoqiang.util.XQSysUtil"
+    local ver = XQVersion.webVersion
+    local hasDisk = 2
+    if XQSysUtil.diskExist() then
+        hasDisk = 1
+    end
+%>
+<%include("web/inc/head")%>
+<title><%:小米路由器%></title>
+<meta name="viewport" content="width=1200">
+<link href="<%=resource%>/web/css/bc.css?v=<%=ver%>" rel="stylesheet">
+<link href="<%=resource%>/web/css/recovery.css?v=<%=ver%>" rel="stylesheet">
+</head>
+<body>
+<div id="doc">
+    <%include("web/inc/header")%>
+    <div id="bd">
+        <div class="mod-rtstatus net-check-err" id="netstatus">
+            <div class="inner">
+                <h1><%:小米路由器已启动安全恢复模式%></h1>
+                <div class="disk" id="diskok">
+                    <div class="ico-diskst ico-diskst-ok"></div>
+                    <p><%:系统启动失败，可一键恢复%></p>
+                </div>
+                <div class="disk" id="diskerr">
+                    <div class="ico-diskst ico-diskst-err"></div>
+                    <p><%:系统启动失败，无内置硬盘%></p>
+                </div>
+            </div>
+        </div>
+        <div class="mod-recovery">
+            <p><%:哎呀，竟然启动失败了……%></p>
+            <p><%:别担心，小米路由器很坚强，当前的安全恢复模式也可以一样正常上网！%></p>
+            <div class="recovery" id="recoveryiserr">
+                <p><%:但是，小米路由器在没有硬盘的情况下无法支持更多功能。%></p>
+                <p><%:建议您安全断开电源，重新连接硬盘之后再次进入安全恢复模式，可以一键恢复系统。%></p>
+            </div>
+            <div class="recovery" id="recoveryisok">
+                <p><%:您还可以一键恢复系统，和升级一样简单。%></p>
+                <div class="btns">
+                    <a id="btnUpgread" href="<%=luci.dispatcher.build_url("web", "syslock")%>?flashtype=download" class="btn btn-dft"><span><%:通过OTA恢复系统%></span></a>
+                    <a id="btnBackup" class="btn btn-primary"><span><%:备份数据%></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%include("web/inc/footer")%>
+</div>
+<script type="text/tmpl" id="tplbackupstep1">
+    <div class="backupstep1">
+        <p class="text"><%:检测到你的硬盘数据大小和外接存储设备可用容量分别为%>：</p>
+        <div class="clearfix disk-row">
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_router.png?v=<%=ver%>">
+                <p id="routersize"><span>--</span><em>GB</em></p>
+            </div>
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_usb.png?v=<%=ver%>">
+                <p id="usbsize"><span>--</span><em>GB</em></p>
+            </div>
+        </div>
+        <p class="text"><%:外接存储设备可用容量充足，是否备份数据？%></p>
+        <a id="step0next" class="btn btn-primary btn-block"><span><%:下一步%></span></a>
+    </div>
+</script>
+<script type="text/tmpl" id="tplbackupstep1_no_usb">
+    <div class="backupstep1">
+        <p class="text"><%:检测到你的硬盘数据大小为%>：</p>
+        <div class="clearfix disk-row">
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_router.png?v=<%=ver%>">
+                <p id="routersize"><span>--</span><em>GB</em></p>
+            </div>
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_no_usb.png?v=<%=ver%>">
+                <p id="usbsize"><span>--</span><em>TB</em></p>
+            </div>
+        </div>
+        <p class="text"><%:未检测到外接存储设备，请将外接存储设备重新插入路由器USB接口%></p>
+        <div class="clearfix btns">
+            <a class="btn btn-primary retryusb"><span><%:已插usb,继续%></span></a>
+            <a class="btn btn-dft close-dialog"><span><%:返回%></span></a>
+        </div>
+    </div>
+</script>
+<script type="text/tmpl" id="tplbackupstep1_tip_usb">
+    <div class="backupstep1">
+        <p class="text"><%:检测到你的硬盘数据大小和外接存储设备可用容量分别为%>：</p>
+        <div class="clearfix disk-row">
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_router.png?v=<%=ver%>">
+                <p id="routersize"><span>--</span><em>GB</em></p>
+            </div>
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_no_usb.png?v=<%=ver%>">
+                <p id="usbsize"><span>--</span><em>TB</em></p>
+            </div>
+        </div>
+        <p class="text"><%:外接存储设备可用容量不足，请清理或更换其他存储%></p>
+        <div class="clearfix btns">
+            <a class="btn btn-primary retryusb"><span><%:已清理，继续备份%></span></a>
+            <a class="btn btn-dft close-dialog"><span><%:返回%></span></a>
+        </div>
+    </div>
+</script>
+<script type="text/tmpl" id="tplbackupstep2">
+    <div class="backupstep2">
+        <p class="text"><%:请选择你要备份的目录%>：</p>
+        <div class="clearfix data-list" id="userdiskdata">
+        </div>
+        <div class="clearfix btns">
+            <a id="btnBackupStart" class="btn btn-primary"><span><%:开始备份%></span></a>
+            <a class="btn btn-dft close-dialog"><span><%:取消%></span></a>
+        </div>
+    </div>
+</script>
+<script type="text/tmpl" id="tplbackupstep3">
+    <div class="backupstep3">
+        <div class="clearfix disk-row">
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_router.png?v=<%=ver%>">
+            </div>
+            <div class="line"></div>
+            <div class="disk-ico">
+                <img src="<%=resource%>/web/img/minisys_usb.png?v=<%=ver%>">
+            </div>
+        </div>
+        <p class="text"><%:正在备份硬盘数据，请稍候...%></p>
+        <div class="loading"></div>
+        <a id="btnBackupStop" class="btn btn-primary btn-block"><span><%:停止备份%></span></a>
+    </div>
+</script>
+<script type="text/tmpl" id="tpldiskdataitem">
+    <div class="item" title="{$name}&#10;{$size}" >
+        <label><input type="checkbox" name="item" checked="true" data-type="{$type}" data-path="{$path}" data-name="{$name}" data-size="{$size}" /> <span class="{$icoclass}"></span><span class="name">{$name}</span></label>
+    </div>
+</script>
+<%include("web/inc/g.js")%>
+<script>
+$(function(){
+    var recovery = $( '.recovery' ),
+        recoveryisok = $( '#recoveryisok' ),
+        recoveryiserr = $( '#recoveryiserr' ),
+        disk = $( '.disk' ),
+        diskok = $( '#diskok' ),
+        diskerr = $( '#diskerr' ),
+        diskType = <%=hasDisk%>;
+    if ( diskType === 1 ) {
+        recovery.hide();
+        disk.hide();
+        recoveryisok.show();
+        diskok.show();
+    } else {
+        recovery.hide();
+        disk.hide();
+        recoveryiserr.show();
+        diskerr.show();
+    }
+
+
+    $( '#btnUpgread' ).on( 'click', function( e ){
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var dlgUpgradeConfirm = $.confirm(
+            '<div class="mod-downflash"><%:请注意：升级将会使所有已连接设备的网络中断，升级过程中请勿断开路由器电源或关闭本页面！%></div>',
+            function() {
+                window.location.href = url;
+            }
+        );
+    });
+
+    var backup = {
+        dialogStep1: null,
+        dialogStep2: null,
+        dialogStep3: null,
+        backupStatus: 0,
+        backupDataStatusTimer: null,
+        setDiskUsbSize: function( userDiskData ){
+            $('#routersize').html( '<span>' + userDiskData.mount.userdisk.used + '</span>' );
+            $('#usbsize').html( '<span>' + userDiskData.mount.usb.available + '</span>' );
+        },
+        tryBackup: function(){
+            var self = this;
+            var userDiskData = this.getUserDiskDataInfo();
+            var toKB = function( number ){
+                var label = number.slice( -1 ).toLowerCase();
+                var size = number.substring( 0, number.length - 1 );
+                switch( label ){
+                    case 'm':
+                        size = size * 1024;
+                        break;
+                    case 'g':
+                        size = size * 1024 * 1024;
+                        break;
+                    case 't':
+                        size = size * 1024 * 1024 *1024;
+                        break;
+                }
+                return size;
+            };
+            if( userDiskData.code == 0 ){
+                //has usb
+                var disk = userDiskData.mount.userdisk.used;
+                var usb = userDiskData.mount.usb.available;
+                disk = toKB( disk );
+                usb = toKB( usb );
+                if( usb > disk ){
+                    this.dialogStep1 = $.dialog({
+                        title: '<%:检测到外接存储%>',
+                        content: $('#tplbackupstep1').html(),
+                        lock: true,
+                        width: 390,
+                        initialize: function(){
+                            self.setDiskUsbSize( userDiskData );
+                        }
+                    });
+                    $( 'body' ).undelegate( '#step0next', 'click' );
+                    $( 'body' ).delegate( '#step0next', 'click', function( e ){
+                        e.preventDefault();
+                        self.dialogStep1.close();
+                        self.dialogStep2 = $.dialog({
+                            title: '<%:备份目录%>',
+                            content: $('#tplbackupstep2').html(),
+                            lock: true,
+                            width: 390,
+                            initialize: function(){
+                                self.renderUserDiskDataInfo( userDiskData );
+                            }
+                        });
+                        $('.close-dialog').on( 'click', function(e){
+                            e.preventDefault();
+                            self.dialogStep2.close();
+                        });
+                    } );
+                }else{
+                    this.dialogStep1 = $.dialog({
+                        title: '<%:检测到外接存储%>',
+                        content: $('#tplbackupstep1_tip_usb').html(),
+                        lock: true,
+                        width: 390,
+                        initialize: function(){
+                            self.setDiskUsbSize( userDiskData );
+                        }
+                    });
+                    $('.retryusb').on( 'click', function(e){
+                        e.preventDefault();
+                        self.dialogStep1.close();
+                        self.tryBackup();
+                    });
+                    $('.close-dialog').on( 'click', function(e){
+                        e.preventDefault();
+                        self.dialogStep1.close();
+                    });
+                }
+            }else if( userDiskData.code == 1624 ){
+                // no usb
+                this.dialogStep1 = $.dialog({
+                    title: '<%:备份到外接存储%>',
+                    content: $('#tplbackupstep1_no_usb').html(),
+                    lock: true,
+                    width: 390
+                });
+                $('.retryusb').on( 'click', function(e){
+                    e.preventDefault();
+                    self.dialogStep1.close();
+                    self.tryBackup();
+                });
+                $('.close-dialog').on( 'click', function(e){
+                    e.preventDefault();
+                    self.dialogStep1.close();
+                });
+            }else{
+                //其他原因
+                $.alert( userDiskData.msg );
+            }
+        },
+        getUserDiskDataInfo: function(){
+            var result;
+            $.ajax({
+                type: 'GET',
+                url: '<%=luci.dispatcher.build_url("api", "xqsystem","userdisk_data")%>',
+                datatype: 'json',
+                async: false,
+                success: function( res ){
+                    res = $.parseJSON( res );
+                    result = res;
+                }
+            });
+            return result;
+        },
+        renderUserDiskDataInfo: function( userDiskData ){
+            var html = [];
+            var tmplItem = $('#tpldiskdataitem').html();
+            $( userDiskData.info ).each(function(index, item){
+                html.push( StringH.tmpl( tmplItem, {
+                    type: item.type,
+                    path: item.path,
+                    name: item.name,
+                    size: item.size,
+                    icoclass: item.type == 'folder' ? 'ico-folder' : 'ico-file'
+                }) );
+            });
+            $('#userdiskdata').html( html.join('') );
+        },
+        backupDataStatus: function(){
+            var self = this;
+            // -- 1 拷贝中
+            // -- 2 拷贝完成
+            // -- 3 拷贝失败
+            if( this.backupStatus == 0 || this.backupStatus == 1 ){
+                $.ajax({
+                    url: '<%=luci.dispatcher.build_url("api", "xqsystem","backup_status")%>',
+                    type: 'GET',
+                    datatype: 'json',
+                    success: function( res ){
+                        res = $.parseJSON( res );
+                        if( res.code == 0 ){
+                            self.backupStatus = res.status;
+                            self.backupDataStatusTimer = setTimeout(function(){
+                                self.backupDataStatus();
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+            if( this.backupStatus == 2 ){
+                this.dialogStep3.close();
+                $.alert('<%:拷贝完成%>');
+                this.backupStatus = 0;
+            }
+            if( this.backupStatus == 3 ){
+                this.dialogStep3.close();
+                $.alert('<%:拷贝失败%>');
+                this.backupStatus = 0;
+            }
+        },
+        backupCancel: function(){
+            var self = this;
+            $.ajax({
+                url: '<%=luci.dispatcher.build_url("api", "xqsystem","backup_cancel")%>',
+                type: 'GET',
+                datatype: 'json',
+                success: function( res ){
+                    res = $.parseJSON( res );
+                    if( res.code == 0 ){
+                        self.dialogStep3.close();
+                        if( self.backupDataStatusTimer ){
+                            clearTimeout( self.backupDataStatusTimer );
+                        }
+                        self.backupStatus = 0;
+                    }
+                }
+            });
+        },
+        backupData: function( inputs ){
+            var self = this;
+            var btn = $('#btnBackupStart');
+            if( btn.hasClass('btn-primary-disabled') ){
+                return;
+            }
+            var postData = {};
+            var backupdata = [];
+            inputs.each(function(index, item){
+                var obj = {
+                    type: $(item).attr('data-type'),
+                    path: $(item).attr('data-path'),
+                    name: $(item).attr('data-name'),
+                    size: $(item).attr('data-size')
+                };
+                backupdata.push( obj );
+            });
+
+            backupdata = window.JSON.stringify(backupdata);
+            postData.files = backupdata;
+            btn.addClass('btn-primary-disabled').find('span').text('<%:处理中...%>');
+            $.ajax({
+                url: '<%=luci.dispatcher.build_url("api", "xqsystem","backup_data")%>',
+                type: 'POST',
+                data: postData,
+                datatype: 'json',
+                success: function( res ){
+                    res = $.parseJSON( res );
+                    if( res.code == 0 ){
+                        self.dialogStep2.close();
+                        self.dialogStep3 = $.dialog({
+                            title: '<%:正在备份硬盘数据%>',
+                            content: $('#tplbackupstep3').html(),
+                            lock: true,
+                            width: 390,
+                            beforeunload: function(){
+                                // self.backupCancel();
+                            }
+                        });
+                        self.backupDataStatus();
+                        $('#btnBackupStop').on( 'click', function(e){
+                            e.preventDefault();
+                            if( $(this).hasClass('btn-primary-disabled') ){
+                                return;
+                            }
+                            $(this).addClass('btn-primary-disabled').find('span').text('<%:停止备份中...%>');
+                            self.backupCancel();
+                        });
+                        $('.d-close').on( 'click', function(e){
+                            e.preventDefault();
+                            self.backupCancel();
+                        });
+                    }
+                }
+            });
+        },
+        bindEvent: function(){
+            var self = this;
+            $( '#btnBackup' ).on( 'click', function(e){
+                e.preventDefault();
+                self.tryBackup();
+            } );
+
+            $( 'body' ).delegate( '#btnBackupStart', 'click', function( e ){
+                e.preventDefault();
+                var inputs = $('#userdiskdata input:checked');
+                if( inputs.length > 0 ){
+                    self.backupData( inputs );
+                }else{
+                    $.alert('<%:至少选择1个%>');
+                }
+            } );
+        }
+    };
+
+    backup.bindEvent();
+
+});
+</script>
+</body>
+</html>

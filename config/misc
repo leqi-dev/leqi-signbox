@@ -1,0 +1,100 @@
+
+config misc mount_bind_etc
+	option flag_name flag_format_overlay
+	option has_rsync 0
+	option do_fac_mode 1
+	option sync_etc 0
+
+config misc mount_jffs2
+	option do_mount 1
+
+config misc determine_ext_root
+	option skip_det_ext_root 1
+
+config misc wireless
+        option if_2G mt7620
+        option if_5G mt7612
+        option apclient_2G apcli0
+        option ifname_2G wl1
+        option ifname_5G wl0
+        option ifname_apclient_2G apcli0
+        option guest_2G wl2
+        option ifname_guest_2G wl2
+
+config misc httpd
+        option uhttpd 0
+
+config misc switchop
+        option start_lan 'mii_mgr -s -p 0 -r 0 -v 0x3100 >/dev/null;mii_mgr -s -p 1 -r 0 -v 0x3100 >/dev/null'
+	option stop_lan 'mii_mgr -s -p 0 -r 0 -v 0x3900 >/dev/null;mii_mgr -s -p 1 -r 0 -v 0x3900 >/dev/null'
+	option wan_connect '/usr/sbin/ethstt 2>&1 | grep -e"^port 4" | grep -q "up"'
+	option lan_count '/usr/sbin/ethstt 2>&1 | grep -e"^port 0" -e"^port 1" | grep "up" | wc -l'
+        option bridgeap_connect 'bridgeap_connect_r1cm'
+        option bridgeap_open 'bridgeap_open_r1cm'
+        option bridgeap_close 'bridgeap_close_r1cm'
+        option wifiap_connect 'wifiap_connect_r1cm'
+        option wifiap_open 'wifiap_open_r1cm'
+        option wifiap_close 'wifiap_close_r1cm'
+	option get_wan_100m 'mii_mgr -s -p 0 -r 31 -v 8000 && mii_mgr -g -p 4 -r 4'
+	option reg_100m_on '5e1'
+	option reg_100m_off '461'
+        option set_wan_100m 'mii_mgr -s -p 0 -r 31 -v 8000 && mii_mgr -s -p 4 -r 4 -v'
+        option reneg_wan 'mii_mgr -s -p 4 -r 0 -v 3300'
+
+config misc quickpass
+	option ctf 0
+
+config misc log
+        option  redundancy_mode 0
+
+config misc boot
+	option syslog 1
+	option checkswap 0
+
+config misc firewall
+	option webinit 1
+
+config misc messagingagent
+        option thread_num 2
+
+config misc iwevent
+	option authorize 1
+
+config misc samba
+	option smb_tune 1
+	option smb_sndbuf 1048576
+	option smb_rcvbuf 1048576
+	option smb_wcache 262144
+	option smb2_max_buf 1048576
+
+config misc initd
+	option cpulimit_en 1
+	option cpuctr_en 0
+	option trafctr_en 0
+	option networkdt_en 0
+
+config misc hardware
+	option model R1CM
+        option recovery 0
+        option gpio 0
+        option flash_per 1
+	option bbs 'http://bbs.xiaomi.cn/forum-706-1.html'
+	option verify 'cd /tmp;mkxqimage -v '
+	option camera '/extdisks/sda1/'
+	option usbmode 1
+	option rom_up_path '/tmp/'
+	option rom_up_file 'customrom.bin'
+	option cpufreq '580MHz'
+
+config misc config_bkup
+	option cfg_bkup_en 0
+
+config misc fantmp
+    option fantmp_en 0
+
+config misc check_for_boottype
+	option flag31 1
+
+config misc ota_pred
+        option download 0
+

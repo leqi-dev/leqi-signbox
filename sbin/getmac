@@ -1,0 +1,34 @@
+#!/bin/sh
+
+usage() {
+	echo "getmac <ra0 | rai0 | eth | *>"
+	echo "example: getmac"
+	echo "         getmac eth"
+	echo "         getmac ra0"
+	echo "         getmac rai0"
+}
+
+ethadr=`hexdump -C /dev/mtd3 -s 40 -n 6 | awk 'NR<2 {print $2":"$3":"$4":"$5":"$6":"$7}'`
+ra0adr=`hexdump -C /dev/mtd3 -s 4 -n 6 | awk 'NR<2 {print $2":"$3":"$4":"$5":"$6":"$7}'`
+rai0adr=`hexdump -C /dev/mtd3 -s 32772 -n 6 | awk 'NR<2 {print $2":"$3":"$4":"$5":"$6":"$7}'`
+
+case $1 in
+	-h)
+	usage
+	;;
+	wl0)
+	echo "$ra0adr"
+	;;
+	wl1)
+	echo "$rai0adr"
+	;;
+	eth)
+	echo "$ethadr"
+	;;
+	*)
+	echo "$ethadr,$wl1adr,$wl0adr"
+	;;
+esac
+
+
+

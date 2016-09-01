@@ -1,0 +1,69 @@
+<%
+local XQSysUtil = require("xiaoqiang.util.XQSysUtil")
+local romChannel = XQSysUtil.getChannel()
+
+local hasDisk = 2
+if XQSysUtil.diskExist() then
+    hasDisk = 1
+end
+%>
+        <div class="mod-upgrade">
+            <div class="hd"><h3><%:升级检测%></h3></div>
+            <div class="bd">
+                <%if hasDisk == 2 then%>
+                    <p><%:没有硬盘，无法升级%></p>
+                <%else%>
+                    <h4><%:系统版本%></h4>
+                    <p id="upgradeinfo"></p>
+                    <p class="hasnewver" style="display:none;"><a href="<%=luci.dispatcher.build_url("web", "syslock")%>?flashtype=download" class="btn btn-primary" id="btnUpgread"><span><%:立即升级%></span></a></p>
+                    <p><a href="#" id="btnUpload" class="btn btn-dft"><span><%:手动升级%></span></a></p>
+                    <div class="logs" style="display:none;">
+                        <h4><%:更新日志%></h4>
+                        <div id="changelog"></div>
+                    </div>
+                <%end%>
+            </div>
+        </div>
+        <div class="mod-set mod-uploadlog">
+            <div class="hd">
+                <h3><%:系统自动升级%></h3>
+                <div class="switch">
+                    <a href="#" id="autoOtaswitch" class="btn-switch btn-switch-off"></a>
+                </div>
+            </div>
+            <div class="bd">
+                <%:系统每天4:00自动升级为最新版本。%>
+            </div>
+        </div>
+        <div class="mod-uploadlog">
+            <div class="hd">
+                <h3><%:上传日志%></h3>
+            </div>
+            <div class="bd">
+                <button type="button" id="btnUploadlog" class="btn btn-primary"><span><%:上传日志%></span></button>
+            </div>
+        </div>
+
+        <div class="mod-uploadlog">
+            <div class="hd">
+                <h3><%:恢复出厂设置%></h3>
+            </div>
+            <div class="bd">
+                <button type="button" id="btnReset" class="btn btn-primary"><span><%:立即恢复%></span></button>
+            </div>
+        </div>
+    <%if romChannel == "release" then%>
+        <div class="mod-uploadlog">
+            <div class="hd">
+                <h3><%:设置系统语言%></h3>
+            </div>
+            <div class="bd">
+                <div class="clearfix">
+                    <div class="form-item-select">
+                        <label class="k"><%:系统语言%></label>
+                        <span class="v"><select name="lang" id="lang" class="beautify" style="width:100px;"></select></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <%end%>

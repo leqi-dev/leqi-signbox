@@ -1,0 +1,9 @@
+
+config core 'common'
+	option PRIVACY '1'
+	option ROUTER_NAME_PENDING '1'
+	option ROM_DOWNLOAD_URL 'http://ota.officekit.org/officekit/rom/r1cm/miwifi_r1cm_all_11961_1.0.10.bin'
+	option ROM_UPLOAD_URL '/tmp/customrom.bin'
+	option INITTED 'YES'
+	option ROUTER_NAME 'PandoraBox_5G_706DD0'
+
