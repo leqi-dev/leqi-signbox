@@ -5,11 +5,19 @@ local OKHttpUtil = require("officekit.util.OKHttpUtil")
 local LuciJson = require("json")
 
 function _macScan()
-	local maclist_j = OKHttpUtil.httpGetRequest("http://192.168.51.1/mac.json")
-	local maclist = LuciJson.decode(maclist_j.res)
-	local segment = maclist["segment"]
-	local fequency = maclist["fequency"]
-	local mac_arr = maclist["macs"]
+	local maclist_j = OKHttpUtil.httpPostRequest("http://dev.api.officekit.org/macList","{\"devicesCode\":\"635c4653b3c97e01\"}");
+	--if pcall(LuciJson.decode) then
+		local maclist = LuciJson.decode(maclist_j.res)
+	--else
+		--print("get maclist error")
+		--return
+	--end
+	if OKFunction.isStrNil(maclist["code"]) or maclist["code"] ~= "000000" then
+		return 
+	end
+
+	local segment = _getSegment()
+	local mac_arr = maclist["data"]
 	local LuciUtil = require "luci.util"
 	local scanlist = LuciUtil.execi("nmap -sP "..segment)
 	if scanlist then
@@ -17,22 +25,85 @@ function _macScan()
 			local valide = valideStr(line)
 			if valide then
 				local mac = string.sub(line, 13, 30):match("(%S+)")
-				if _inMacList(mac_arr,mac) then	
-					print(mac)
-				end
+				_inMacList(mac_arr,mac)
 			end
 		end
+		_fillOffline(mac_arr)
+		local mac_arr_raw = {["devicesCode"] = "635c4653b3c97e01", ["macList"] = mac_arr}
+		local macarr_json = LuciJson.encode(mac_arr_raw)
+print(macarr_json)
+		OKHttpUtil.httpPostRequest("http://dev.api.officekit.org/macList",macarr_json)		
 	end
 end
 
+function _getSegment()
+    	local OKLanWanUtil = require("officekit.util.OKLanWanUtil")                     
+    	local wan = OKLanWanUtil.getLanWanInfo("wan")
+	local mask = tostring(wan.ipv4[1].mask)
+	local ip = wan.gateWay
+	local ones = string.split(mask,".")
+	local onecount = 0
+	for k,one in pairsByKeys(ones) do
+		onecount = onecount + _onecount(one)
+	end
+	return ip.."/"..onecount		
+end
+
+function pairsByKeys(t)      
+    local a = {}      
+    for n in pairs(t) do          
+        a[#a+1] = n      
+    end      
+    table.sort(a)      
+    local i = 0      
+    return function()          
+    i = i + 1          
+    return a[i], t[a[i]]      
+    end  
+end
+
+
+function _onecount(str)
+	local result = 0
+	if tonumber(str) == 0 then
+		return 0
+	end
+	while math.floor(str/2) > 0 do
+		result = result + 1
+		str = str / 2
+	end
+	return result+1
+end
+
+function string.split(str, delimiter)
+    if str==nil or str=='' or delimiter==nil then
+	return nil
+    end
+	
+    local result = {}
+    for match in (str..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match)
+    end
+    return result
+end
+
+function _fillOffline(list)
+        for i = 1, #list do
+                if OKFunction.isStrNil(list[i]["line"]) then
+                        list[i]["line"] = 2                                 
+                end                                        
+        end	
+end
+
 function _inMacList(list,mac)
+	mac = string.lower(mac)
 	for i = 1, #list do
-		if mac == list[i]["mac"] then 
-			return true
+		if mac == string.lower(list[i]["mac"]) then
+			list[i]["line"] = 1
+			return
 		end
 	end
-
-	return false
+	return
 end
 
 function valideStr(str)

@@ -5,7 +5,7 @@
         luci.http.redirect(luci.dispatcher.build_url("okweb", "init","hello"))
     end
 
-    local router_name = OKSysUtil.getRouterName() or "OfficeKit签到机"
+    local router_name = OKSysUtil.getRouterName() or "乐企签到盒子"
     local isBinded = (OKSysUtil.getPassportBindInfo() and 'true') or 'false'
     local logType = 1
     if logtype then
@@ -16,7 +16,7 @@
     local mac = luci.sys.net.ip4mac(remote_addr)
 %>
 <%include("okweb/inc/head")%>
-    <title><%:OfficeKit签到机%></title>
+    <title><%:乐企签到盒子%></title>
     <meta name="viewport" content="width=1024">
     <link href="<%=resource%>/web/css/bc.css?v=<%=ver%>" rel="stylesheet">
     <link href="<%=resource%>/web/css/login.css?v=<%=ver%>" rel="stylesheet">
@@ -29,7 +29,7 @@
     <div id="bd">
         <div class="mod-login">
             <div class="pic"></div>
-            <h1 class="title"><%:欢迎使用OfficeKit签到机%></h1>
+            <h1 class="title"><%:欢迎使用乐企签到盒子%></h1>
             <form id="rtloginform" name="rtloginform" method="post" action="#" class="form form-login" autocomplete="off">
                 <div class="form-item">
                     <span class="v"><input id="password" class="ipt-text" type="password" name="password" autocomplete="off" placeholder="<%:请输入签到机管理密码%>"></span>

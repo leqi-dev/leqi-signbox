@@ -31,7 +31,7 @@ local mac = luci.sys.net.ip4mac(remote_addr)
 local lanType = wifiUtil.getDeviceWifiIndex(mac)
 %>
 <%include("okweb/inc/head")%>
-    <title><%:OfficeKit签到机%></title>
+    <title><%:乐企签到盒子%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -157,11 +157,11 @@ local lanType = wifiUtil.getDeviceWifiIndex(mac)
             <p class="tit" id="lanlink" style="display:none;"><%:正在配置用户名与密码，15秒后将自动跳转管理后台%></p>
             <p class="tit" id="wifilink" style="display:none;"><%:正在配置用户名与密码，请稍候手动连接Wi-Fi%> <b id="ssid24"></b> <%:或者%> <b id="ssid50"></b>，<%:连接Wi-Fi成功后请刷新页面进入管理后台%></p>
             <div class="codeimg">
-                <p><%:扫描二维码下载手机APP%><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:扫描二维码下载手机APP%><br><%:%></p>
                 <p><a href="<%=resource%>/web/img/code.png?v=<%=ver%>" target="_blank"><img width="150" src="<%=resource%>/web/img/code.png?v=<%=ver%>"></a></p>
             </div>
             <div class="codeimg-btn">
-                <p><%:点击图标下载手机APP %><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:点击图标下载手机APP %><br><%:%></p>
                 <p><a href="http://www1.miwifi.com/miwifi_download.html" class="btn btn-primary btn-block" ><span><%:立即下载手机APP%></span></a></p>
             </div>
         </div>
@@ -259,13 +259,13 @@ local lanType = wifiUtil.getDeviceWifiIndex(mac)
         <!--  -->
         <div class="mod-guide mod-guide-wdsfinish">
             <p class="tit"><%:已扩大无线网络 %><span class="green" id="wdswifi"></span> <%:的覆盖范围，稍等30秒后%></p>
-            <p class="tit"><%:可以通过 %><span class="green" id="wdsip"></span> <%:OfficeKit签到机已经正常联网%></p>
+            <p class="tit"><%:可以通过 %><span class="green" id="wdsip"></span> <%:乐企签到盒子已经正常联网%></p>
             <!--<div class="codeimg">
-                <p><%:扫描二维码下载手机APP%><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:扫描二维码下载手机APP%><br><%:%></p>
                 <p><img width="150" src="<%=resource%>/web/img/code.png?v=<%=ver%>"></p>
             </div>-->
             <div class="codeimg-btn">
-                <p><%:点击图标下载手机APP %><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:点击图标下载手机APP %><br><%:%></p>
                 <p><a href="http://www1.miwifi.com/miwifi_download.html" class="btn btn-primary btn-block" ><span><%:立即下载手机APP%></span></a></p>
             </div>
         </div>
@@ -275,7 +275,7 @@ local lanType = wifiUtil.getDeviceWifiIndex(mac)
                 <p class="tit"><%:请设置有线中继模式的无线网络名称和密码%></p>
                 <div class="lanap-mode-tip">
                     <p class="hd"><%:有线中继模式说明%></p>
-                    <p ><%:1.请确保小米路由器的WAN口与旧路由器通过网线连接%></p>
+                    <p ><%:1.请确保乐企签到盒子的WAN口与旧路由器通过网线连接%></p>
                     <p ><%:2.旧路由器与小米路由处于同一局域网中，可以互访%></p>
                 </div>
                 <form id="lanapform" name="lanapform" class="form clearfix" action="/">
@@ -317,13 +317,13 @@ local lanType = wifiUtil.getDeviceWifiIndex(mac)
         <!--  -->
         <div class="mod-guide mod-guide-lanapfinish">
             <p class="tit"><%:成功创建无线网络 %><span class="green" id="lanapssid24"></span> <%:稍等30秒后%></p>
-            <p class="tit"><%:可以通过 %><span class="green" id="lanapip"></span> <%:访问小米路由器管理后台 。%></p>
+            <p class="tit"><%:可以通过 %><span class="green" id="lanapip"></span> <%:访问乐企签到盒子管理后台 。%></p>
             <div class="codeimg">
-                <p><%:扫描二维码下载手机APP%><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:扫描二维码下载手机APP%><br><%:%></p>
                 <p><img width="150" src="<%=resource%>/web/img/code.png?v=<%=ver%>"></p>
             </div>
             <div class="codeimg-btn">
-                <p><%:点击图标下载手机APP %><br><%:体验路由器远程管理和更多好玩功能！%></p>
+                <p><%:点击图标下载手机APP %><br><%:%></p>
                 <p><a href="http://www1.miwifi.com/miwifi_download.html" class="btn btn-primary btn-block" ><span><%:立即下载手机APP%></span></a></p>
             </div>
         </div>
@@ -385,7 +385,7 @@ var isMobile = {
             'hdclass': 'mod-guide-hd'
         },
         'finish': {
-            'p': '<%:恭喜！小米路由器已初始化完成！%>',
+            'p': '<%:恭喜！乐企签到盒子已初始化完成！%>',
             'hdclass': 'mod-guide-hd is-hd-success'
         },
         'wds': {
@@ -972,7 +972,7 @@ var isMobile = {
                 nonce,
                 oldPwd,
                 newPwd,
-                ac = '_5G',
+                ac = '',
                 ispwdsame,
                 validator,
                 _validRules,

@@ -4,7 +4,7 @@
     local ccode = xqCountryCode.getCurrentCountryCode()
 %>
 <%include("web/inc/head")%>
-    <title>小米路由器</title>
+    <title>乐企签到盒子</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,13 +16,13 @@
     <div id="hd">
         <div class="inner">
             <div class="mod-head clearfix">
-                <h1 id="logo"><a href="<%=homeUrl%>"><img src="<%=resource%>/web/img/logo.png" alt="<%:小米路由器%>"></a></h1>
+                <h1 id="logo"><a href="<%=homeUrl%>"><img src="<%=resource%>/web/img/logo.png" alt="<%:乐企签到盒子%>"></a></h1>
             </div>
         </div>
     </div>
     <div id="bd">
         <div class="mod-agreenment">
-            <h2><%:小米路由器系列产品用户许可使用协议%></h2>
+            <h2><%:乐企签到盒子系列产品用户许可使用协议%></h2>
             <%if ccode == "HK" then%>
             <%include("web/inc/agreement_HK")%>
             <%elseif ccode == "TW" then %>
