@@ -4,8 +4,34 @@ local OKFunction = require("officekit.common.OKFunction")
 local OKHttpUtil = require("officekit.util.OKHttpUtil")
 local LuciJson = require("json")
 
+function getIP()
+    local OKLanWanUtil = require("officekit.util.OKLanWanUtil")   
+    local code = 0                                             
+    local result = {}                                          
+    local status = OKLanWanUtil.getPPPoEStatus()               
+    if status then                                             
+        result = status                                        
+        if result.errtype == 1 then                            
+            code = 1603                                        
+        elseif result.errtype == 2 then                        
+            code = 1604                                        
+        elseif result.errtype == 3 then                                         
+            code = 1605                                                             
+        end                                                                         
+    else                                                                                                       
+        code = 1602                                                                                            
+    end  
+                                                                                                      
+    if code ~= 0 then
+	return 
+    end
+    return tostring(status.ip.address)
+
+end
+
 function _macScan()
-	local maclist_j = OKHttpUtil.httpPostRequest("http://dev.api.officekit.org/macList","{\"devicesCode\":\"635c4653b3c97e01\"}");
+	local reportIp = getIP()
+	local maclist_j = OKHttpUtil.httpPostRequest("http://dev.api.officekit.org/macList","{\"devicesCode\":\"635c4653b3c97e01\",\"reportIp\":\""..reportIp.."\"}");
 	--if pcall(LuciJson.decode) then
 		local maclist = LuciJson.decode(maclist_j.res)
 	--else

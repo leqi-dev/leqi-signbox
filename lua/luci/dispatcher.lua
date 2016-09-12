@@ -168,6 +168,10 @@ function getremotemac()
     return OKFunction.macFormat(mac)
 end
 
+function authenticator.noauth(validator,accs,defult)
+	return defult	
+end
+
 -- TODO auth will be found similar
 function authenticator.jsonauth(validator, accs, default)
     local OKSysUtil = require("officekit.util.OKSysUtil")
