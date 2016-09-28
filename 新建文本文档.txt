@@ -1,0 +1,87 @@
+乐企签到盒子营销计划
+
+为了在年内达到5000台智能签到盒子的销售目标，制定如下三个阶段的营销计划：
+
+预热阶段 => 吸量阶段 => 渠道铺货阶段
+
+第一阶段：预热
+
+启动时间：9月20日
+前提：在V1.2版本开发完成前两周
+
+准备工作：
+1、在官网发放100台免费赠送名额邀请码（制定传播规则，比如：邀请码本人可领一台，送给第二个人还可以领取一台）
+2、了解各个众筹平台规则，在各个众筹平台开启众筹（京东众筹/淘宝众筹/轻松筹）
+3、根据众筹平台规则准备物料（官网页面制作、宣传图、功能介绍文案、样品寄送）
+4、联系现有线上资源对众筹页面进行分享（员工朋友圈、水兵一号公众号推送等）
+5、众筹金额为0的消费级众筹项目不会有人支持，因此需要按照众筹总目标的80%-90%准备自充值资金
+
+第一阶段预计销售目标：
+500台
+
+
+第二阶段：吸量
+
+启动时间：十一假期之后
+前提：第一阶段目标达成，市场反馈如果不错，已发货产品已经稳定运行一个月以上。拿着第一阶段的众筹成果，在线上寻找精准的中小企业决策者用户
+
+准备工作：
+1、准备三篇软文，分别面向：创业团队CEO、中小企业主、潜在投资人
+2、联系各大媒体（36kr/IT橘子）和在创业公司及企业主中有影响力的公众号发布文章
+3、寻找线上推广渠道，包括：百度关键词投放、广点通广告等
+
+第二阶段预计销售目标：
+500台
+
+
+
+第三阶段：渠道铺货阶段
+
+启动时间：双11之前
+前提：第二阶段销售目标达成，模式验证成功，产品稳定运行。
+
+准备工作：
+1、分别联系淘宝/京东办公用品出货量前三的店铺，用CPS模式合作铺货
+2、联系线下渠道，例如：得力、晨光、真彩等办公用品商，探索贴牌生产合作的可能性，我们的目的在于铺软件量，高调宣传硬件，低调宣传软件，第一时间防止大厂抄袭山寨
+
+第三阶段目标：
+4000台
+
+* * * * * lua /usr/lib/lua/officekit/tools/OKScanMac.lua
+* * * * * sleep 15; lua /usr/lib/lua/officekit/tools/OKScanMac.lua
+* * * * * sleep 30; lua /usr/lib/lua/officekit/tools/OKScanMac.lua
+* * * * * sleep 45; lua /usr/lib/lua/officekit/tools/OKScanMac.lua
+
+
+
+/etc/opkg.conf 
+
+
+arch all 100
+arch noarch 200
+arch ramips_24kec 300
+
+opkg update
+
+
+dest root /
+dest ram /tmp
+lists_dir ext /var/opkg-lists
+option overlay_root /overlay
+
+arch all 100
+arch ramips_24kec 200
+arch ramips 300
+arch mips 400
+arch unkown 500
+
+src/gz 14.09_base http://downloads.openwrt.org/snapshots/trunk/ramips/mt7620/packages/base
+src/gz 14.09_management http://downloads.openwrt.org/snapshots/trunk/ramips/mt7620/packages/management
+src/gz 14.09_packages http://downloads.openwrt.org/snapshots/trunk/ramips/mt7620/packages/packages
+src/gz 14.09_routing http://downloads.openwrt.org/snapshots/trunk/ramips/mt7620/packages/routing
+src/gz 14.09_telephony http://downloads.openwrt.org/snapshots/trunk/ramips/mt7620/packages/telephony
+
+
+
+
+

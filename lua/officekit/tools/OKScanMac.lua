@@ -55,9 +55,8 @@ function _macScan()
 			end
 		end
 		_fillOffline(mac_arr)
-		local mac_arr_raw = {["devicesCode"] = "635c4653b3c97e01", ["macList"] = mac_arr}
+		local mac_arr_raw = {["devicesCode"] = "635c4653b3c97e01", ["macList"] = mac_arr, ["reportIp"] = getIP()}
 		local macarr_json = LuciJson.encode(mac_arr_raw)
-print(macarr_json)
 		OKHttpUtil.httpPostRequest("http://dev.api.officekit.org/macList",macarr_json)		
 	end
 end
